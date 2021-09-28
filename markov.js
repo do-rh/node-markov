@@ -1,22 +1,32 @@
 /** Textual markov chain generator */
-
-
 class MarkovMachine {
 
   /** build markov machine; read in text.*/
 
   constructor(text) {
-    let words = text.split(/[ \r\n]+/);
-    // MORE CODE HERE
+    const words = text.split(/[ \r\n]+/);
+    const chains = this.makeChains(words);
+    
   }
 
-  /** set markov chains:
-   *
-   *  for text of "the cat in the hat", chains will be
-   *  {"the": ["cat", "hat"], "cat": ["in"], "in": ["the"], "hat": [null]} */
+  /**Accepts an array of words and generates a markov chain. Returns the chain object
+   * with words as keys and next word choices as an array of values.
+   */
+  makeChains(words) {
+    let chain = {};
+    let keyWord;
+    let nextWord;
 
-  makeChains() {
-    // MORE CODE HERE
+    for (i = 0; i < words.length; i++) {
+      keyWord = words[i];
+      nextWord = words[i+1];
+      if (chain[keyWord] !== undefined) {
+        chain[keyWord].push(nextWord);
+      } else {
+        chain[keyWord] = [nextWord];
+      }
+    }
+    return chain;
   }
 
 
@@ -26,3 +36,8 @@ class MarkovMachine {
     // MORE CODE HERE
   }
 }
+
+
+module.exports = {
+  MarkovMachine
+};
