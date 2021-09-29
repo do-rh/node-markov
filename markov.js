@@ -5,7 +5,7 @@ class MarkovMachine {
 
   constructor(text) {
     const words = text.split(/[ \r\n]+/);
-    const chains = this.makeChains(words);
+    this.chains = this.makeChains(words);
     
   }
 
@@ -17,23 +17,80 @@ class MarkovMachine {
     let keyWord;
     let nextWord;
 
-    for (i = 0; i < words.length; i++) {
+    for (let i = 0; i < words.length; i++) {
       keyWord = words[i];
       nextWord = words[i+1];
-      if (chain[keyWord] !== undefined) {
-        chain[keyWord].push(nextWord);
+      if (nextWord === undefined) {
+        if (chain[keyWord] !== undefined) {
+          chain[keyWord].push(null);
+        } else {
+          chain[keyWord] = [null];
+        }
+        break;
+      }
+      let kWHasPunc = this.hasPunctuation(keyWord);
+      let nWHasPunc = this.hasPunctuation(nextWord);
+      nextWord = nWHasPunc[0];
+
+      if (kWHasPunc[1] === false) {
+        if (chain[keyWord] !== undefined) {
+          chain[keyWord].push(nextWord);
+        } else {
+          chain[keyWord] = [nextWord];
+        }
       } else {
-        chain[keyWord] = [nextWord];
+        if (chain[keyWord] !== undefined) {
+          chain[keyWord].push(null);
+        } else {
+          chain[keyWord] = [null];
+        }
       }
     }
     return chain;
   }
 
+  hasPunctuation(word){
+    if (word.endsWith(".") || 
+          word.endsWith("!") || 
+          word.endsWith("?")) {
+      let noPunctuation = word.slice(0, word.length-1);
+      return [noPunctuation, true];
+    } else {
+      return [word, false];
+    }
+  }
 
   /** return random text from chains */
 
   getText(numWords = 100) {
-    // MORE CODE HERE
+    console.log("this.chains is ", this.chains)
+    let wordArr = Array.from(Object.keys(this.chains));
+
+    let text = [];
+    let nextWord;
+
+    let keyWord = wordArr[Math.floor(Math.random() * wordArr.length)];
+    
+    while (numWords > 0){
+
+      let wordChoices = this.chains[keyWord];
+      console.log("keyWord is ", keyWord);
+      console.log("wordChoices is ", wordChoices)
+      nextWord = wordChoices[Math.floor(Math.random() * wordChoices.length)]
+      
+      if (nextWord === undefined) {
+        text.push(`${keyWord}.`);
+      } else {
+        text.push(keyWord);
+      }
+
+      keyWord = nextWord;
+      numWords--;
+    }
+
+    let returnedText = text.join(" ");
+    return returnedText;
+
   }
 }
 
