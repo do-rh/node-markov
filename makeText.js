@@ -15,8 +15,8 @@ async function makeText(filepath) {
         process.exit(1);
     }
     const markovMachine = new MarkovMachine(contents);
-    markovMachine.getText();
-    // return markovMachine;
+    outputText = markovMachine.getText();
+    console.log(outputText);
 }
 
 makeText(filePath);
