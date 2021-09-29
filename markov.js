@@ -36,6 +36,7 @@ class MarkovMachine {
       //if nextword is not null, check if there is punctuation. if it is null, keep as null.
       if (nextWord !== null) {
         let noPuncNextWord = MarkovMachine.hasPunctuation(nextWord);
+
         if (noPuncNextWord !== true) {
           nextWord = noPuncNextWord;
         }
@@ -52,11 +53,12 @@ class MarkovMachine {
   }
 
   static randomlyPickElementNotNull(array) {
-    let randomChoice;
-    randomChoice = array[Math.floor(Math.random() * array.length)];
+    let randomChoice = array[Math.floor(Math.random() * array.length)];
+
     while (randomChoice === null) {
       randomChoice = array[Math.floor(Math.random() * array.length)];
     }
+
     return randomChoice;
   }
 
@@ -79,11 +81,10 @@ class MarkovMachine {
     
     let keys = Array.from(Object.keys(this.markovChains));
     let keyWord = MarkovMachine.randomlyPickElementNotNull(keys);
-    let nextWord;
 
     while (numWords > 0) {
       let wordChoices = this.markovChains[keyWord];
-      nextWord = MarkovMachine.randomlyPickElement(wordChoices);
+      let nextWord = MarkovMachine.randomlyPickElement(wordChoices);
 
       if (nextWord === null) {
         outputText.push(`${keyWord}.`);
